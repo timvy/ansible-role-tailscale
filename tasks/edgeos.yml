@@ -29,7 +29,7 @@
 - name: fetch installer
   unarchive:
     src: "https://pkgs.tailscale.com/stable/tailscale_1.20.2_mipsle.tgz"
-    dst: /config/tailscale/
+    dest: /config/tailscale/
     remote_src: yes
 
 - name: run script
