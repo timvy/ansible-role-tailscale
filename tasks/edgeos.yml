@@ -30,6 +30,7 @@
   unarchive:
     src: "https://pkgs.tailscale.com/stable/tailscale_1.20.2_mipsle.tgz"
     dst: /config/tailscale/
+    remote_src: yes
 
 - name: run script
   script: /config/firstboot.d/tailscale.sh
