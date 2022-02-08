@@ -33,5 +33,4 @@
     remote_src: yes
 
 - name: run script
-  script: /config/firstboot.d/tailscale.sh
-  remote_src: yes
+  cmd: sh /config/firstboot.d/tailscale.sh
