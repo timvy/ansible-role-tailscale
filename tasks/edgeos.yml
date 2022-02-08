@@ -1,0 +1,35 @@
+---
+- name: create install dir
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /config/firstboot.d
+    - /config/tailscale
+    - /config/tailscale/tailscaled.service.d
+
+- name: create firstboot script
+  blockinfile:
+    path: /config/firstboot.d/tailscale.sh
+    create: yes
+    mode: '0755'
+    block: |
+      #!/bin/sh
+      ln -s /config/tailscale/systemd/tailscaled.service /etc/systemd/system/tailscaled.service
+      ln -s /config/tailscale/systemd/tailscaled.service.d /etc/systemd/system/tailscaled.service.d
+      ln -s /config/tailscale/systemd/tailscaled.defaults /etc/default/tailscaled
+      ln -s /config/tailscale/tailscale /usr/bin/tailscale
+      ln -s /config/tailscale/tailscaled /usr/sbin/tailscaled
+      mkdir -p /var/lib/tailscale
+      touch /config/auth/tailscaled.state
+      chmod 0400 /config/auth/tailscaled.state
+      ln -s /config/auth/tailscaled.state /var/lib/tailscale/tailscaled.state
+      systemctl enable --now tailscaled
+
+- name: fetch installer
+  unarchive:
+    src: "https://pkgs.tailscale.com/stable/tailscale_1.20.2_mipsle.tgz"
+    dst: /config/tailscale/
+
+- name: run script
+  script: /config/firstboot.d/tailscale.sh
