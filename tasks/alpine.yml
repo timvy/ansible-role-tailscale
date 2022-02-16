@@ -1,0 +1,17 @@
+---
+
+- name: Alpine | Install package
+  community.general.apk:
+    name: tailscale
+    update_cache: yes
+
+- name: Alpine | Enable tailscale service at boot
+  sysvinit:
+      name: tailscale
+      state: started
+      enabled: yes
+
+- name: Alpine | Start tailscale service, if not started
+  ansible.builtin.service:
+    name: tailscale
+    state: started
