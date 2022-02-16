@@ -62,7 +62,7 @@
     - command:
         cmd: sysctl -p /etc/sysctl.conf
 
-  when: ip_forwarding
+  when: ip_forwarding is defined
 
 
 - name: Operating System
