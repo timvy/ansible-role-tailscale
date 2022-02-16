@@ -48,6 +48,23 @@
     - name: Refresh Setup
       setup:
 
+- name: Set ip forwarding
+  block:
+    - lineinfile:
+        path: /etc/sysctl.conf
+        line: "{{ item }}"
+        insertafter: EOF
+        state: present
+      loop:
+        - 'net.ipv4.ip_forward = 1'
+        - 'net.ipv6.conf.all.forwarding = 1'
+
+    - command:
+        cmd: sysctl -p /etc/sysctl.conf
+
+  when: ip_forwarding
+
+
 - name: Operating System
   debug:
     msg: "{{ ansible_distribution }} {{ ansible_distribution_major_version }} ({{ ansible_distribution_release }})"
@@ -59,6 +76,7 @@
 - name: Alpine and related families
   when: ansible_distribution == 'Alpine'
   include_tasks: alpine.yml
+
 - name: CentOS and related families
   when: ansible_distribution in centos_family_distros
   include_tasks: centos.yml
