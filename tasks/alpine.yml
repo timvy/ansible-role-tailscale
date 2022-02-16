@@ -5,13 +5,6 @@
     name: tailscale
     update_cache: yes
 
-- name: Alpine | Enable tailscale service at boot
-  sysvinit:
-      name: tailscale
-      state: started
-      enabled: yes
-
-- name: Alpine | Start tailscale service, if not started
-  ansible.builtin.service:
-    name: tailscale
-    state: started
+- name: Alpine | set service name
+  set_fact:
+    tailscale_service: tailscale
