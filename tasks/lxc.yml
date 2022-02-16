@@ -1,0 +1,20 @@
+---
+
+- name: edit lxc properties
+  lineinfile:
+    path: "/etc/pve/lxc/{{ lxc_host }}.conf"
+    line: "{{ item }}"
+    insertafter: EOF
+    state: present
+  loop:
+    - 'lxc.cgroup2.devices.allow: c 10:200 rwm'
+    - 'lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file'
+  delegate_to: pve-hpe
+  register: dev_tunnel
+
+- name: reboot lxc
+  command:
+    cmd: "pct reboot {{ lxc_host }}"
+  delegate_to: pve-hpe
+  when: dev_tunnel.changed
+
